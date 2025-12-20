@@ -1,0 +1,46 @@
+name: PR Checks
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build-and-lint:
+    name: Build & Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repo
+        uses: actions/checkout@v4
+
+      # 1. INSTALL PNPM FIRST (Critical Fix)
+      # This reads "packageManager": "pnpm@9.0.0" from your package.json
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      # 2. THEN SETUP NODE
+      # Now that pnpm is installed, this step can successfully cache it
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: 📥 Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 💅 Linting & Formatting
+        run: pnpm lint
+        # This runs "turbo run lint" from your package.json
+
+      - name: 🔎 Type Check
+        # Assuming you have a turbo script or run tsc directly
+        run: pnpm exec turbo type-check
+
+      - name: 🏗️ Build
+        run: pnpm build
+        # This runs "turbo run build" from your package.json

@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build-and-test:
+    name: Build, Lint, and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm' # Automatically caches your node_modules!
+
+      - name: 📦 Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: 📥 Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 💅 Check Formatting & Linting
+        run: pnpm lint # Ensure you have a script for this in package.json
+
+      - name: 🔎 Type Check
+        # Assuming you have a turbo script or run tsc directly
+        run: pnpm exec turbo type-check
+
+      - name: 🏗️ Build
+        run: pnpm build

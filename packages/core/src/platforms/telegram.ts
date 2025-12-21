@@ -9,7 +9,7 @@ export const telegramHandler: DeepLinkHandler = {
     return {
       webUrl,
       ios: `tg://resolve?domain=${username}`,
-      android: `intent://resolve?domain=${username}#Intent;scheme=tg;package=org.telegram.messenger;end`,
+      android: `intent://resolve?domain=${username}#Intent;scheme=tg;end`,
       platform: 'telegram',
     };
   },

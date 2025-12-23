@@ -2,7 +2,9 @@ import { DeepLinkHandler } from '../types';
 
 export const spotifyHandler: DeepLinkHandler = {
   match: (url) =>
-    url.match(/^https?:\/\/open\.spotify\.com\/(track|artist|album|playlist)\/([^/?#]+)/),
+    url.match(
+      /^https?:\/\/open\.spotify\.com\/(track|artist|album|playlist|show|episode|audiobook)\/([^/?#]+)/,
+    ),
 
   build: (webUrl, match) => {
     const type = match[1];

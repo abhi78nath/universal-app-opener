@@ -11,7 +11,6 @@ import { DeepLinkHandler } from '../types';
  * - Live: youtube.com/live/VIDEO_ID
  */
 function extractYouTubeVideoId(url: string): string | null {
-  // Standard watch URL (with query params)
   const watchMatch = url.match(
     /(?:youtube\.com|m\.youtube\.com)\/watch\?(?:.*&)?v=([a-zA-Z0-9_-]{11})(?:&|$)/,
   );
@@ -44,7 +43,8 @@ function extractTimestamp(url: string): string | null {
   // Match t= parameter with various timestamp formats
   // Valid formats: plain seconds (123), seconds with suffix (123s),
   // or time units combinations (1h2m3s, 1m23s, 2m, 1h, 1h30m, 1h30s)
-  const tMatch = url.match(/[?&]t=((?:\d+h)?(?:\d+m)?(?:\d+s?)?)/);
+  // Note: seconds require 's' suffix when combined with h/m (e.g., 1h2m3s not 1h2m3)
+  const tMatch = url.match(/[?&]t=((?:\d+h)?(?:\d+m)?(?:\d+s)?|\d+)/);
   if (tMatch && tMatch[1]) return tMatch[1];
 
   // Match start= parameter (alternative timestamp format, plain seconds only)

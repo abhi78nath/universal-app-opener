@@ -5,8 +5,6 @@ const generateBtn = document.getElementById('generateBtn') as HTMLButtonElement;
 const openBtn = document.getElementById('openBtn') as HTMLButtonElement;
 const outputSection = document.getElementById('outputSection') as HTMLDivElement;
 const jsonOutput = document.getElementById('jsonOutput') as HTMLPreElement;
-const toggleDeepLinks = document.getElementById('toggleDeepLinks') as HTMLButtonElement;
-const deepLinksContent = document.getElementById('deepLinksContent') as HTMLDivElement;
 const exampleLinks = document.querySelectorAll('.example-link');
 
 let currentResult: ReturnType<typeof generateDeepLink> | null = null;
@@ -51,21 +49,6 @@ openBtn.addEventListener('click', () => {
   const url = urlInput.value.trim();
   if (url) {
     openLink(url, { fallbackToWeb: true, fallbackDelay: 2500 });
-  }
-});
-
-toggleDeepLinks.addEventListener('click', () => {
-  const isHidden = deepLinksContent.classList.contains('hidden');
-  deepLinksContent.classList.toggle('hidden');
-  const toggleText = toggleDeepLinks.querySelector('.toggle-text') as HTMLElement;
-  const toggleIcon = toggleDeepLinks.querySelector('.toggle-icon') as HTMLElement;
-
-  if (isHidden) {
-    toggleText.textContent = 'Hide Deep Links';
-    toggleIcon.textContent = '▲';
-  } else {
-    toggleText.textContent = 'Show Deep Links';
-    toggleIcon.textContent = '▼';
   }
 });
 

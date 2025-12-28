@@ -36,21 +36,53 @@ That's it! The library automatically detects your platform and opens the appropr
 
 Try it out: **[Live Demo](https://mdsaban.github.io/universal-app-opener/)**
 
-## Platform Support
+### Supported Platforms
 
-### ✅ Implemented
+#### YouTube
 
-- [x] **YouTube** - Videos (`youtube.com/watch`, `youtu.be`)
-- [x] **LinkedIn** - Profiles (`linkedin.com/in/*`)
+- Videos
 
-### 🚧 Coming Soon
+#### LinkedIn
 
-- [ ] **Instagram** - Posts, profiles, reels
-- [ ] **Twitter/X** - Tweets, profiles
-- [ ] **Facebook** - Posts, profiles, pages
-- [ ] **TikTok** - Videos, profiles
-- [ ] **Spotify** - Songs, albums, playlists, artists
-- [ ] **WhatsApp** - Chat links, group invites
+- Profiles
+- Posts
+- Company Pages
+- Jobs
+
+#### Instagram
+
+- Profiles
+- Posts
+- Reels
+- IGTV Videos
+
+#### Facebook
+
+- General Facebook URLs (profiles, posts, pages, etc.)
+
+#### Reddit
+
+- Subreddits
+- User Profiles
+
+#### Spotify
+
+- Tracks
+- Artists
+- Albums
+- Playlists
+- Shows
+- Episodes
+- Audiobooks
+
+#### Threads
+
+- User Profiles
+
+#### WhatsApp
+
+- Chat Links (phone number)
+- Chat Links with Pre-filled Text
 
 ## Documentation & API Reference
 

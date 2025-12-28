@@ -106,10 +106,53 @@ interface DeepLinkResult {
 }
 ```
 
-**Supported Platforms:**
+### Supported Platforms
 
-- YouTube: `youtube.com/watch?v=*` and `youtu.be/*`
-- LinkedIn: `linkedin.com/in/*`
+#### YouTube
+
+- Videos
+
+#### LinkedIn
+
+- Profiles
+- Posts
+- Company Pages
+- Jobs
+
+#### Instagram
+
+- Profiles
+- Posts
+- Reels
+- IGTV Videos
+
+#### Facebook
+
+- General Facebook URLs (profiles, posts, pages, etc.)
+
+#### Reddit
+
+- Subreddits
+- User Profiles
+
+#### Spotify
+
+- Tracks
+- Artists
+- Albums
+- Playlists
+- Shows
+- Episodes
+- Audiobooks
+
+#### Threads
+
+- User Profiles
+
+#### WhatsApp
+
+- Chat Links (phone number)
+- Chat Links with Pre-filled Text
 
 ### `detectOS(): 'ios' | 'android' | 'desktop'`
 

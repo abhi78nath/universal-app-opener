@@ -9,6 +9,7 @@ import {
   unknownHandler,
   whatsappHandler,
   youtubeHandler,
+  githubHandler,
 } from './platforms';
 import { DeepLinkResult } from './types';
 

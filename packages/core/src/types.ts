@@ -8,6 +8,7 @@ export type Platform =
   | 'reddit'
   | 'threads'
   | 'discord'
+  | 'github'
   | 'twitch'
   | 'unknown';
 

@@ -17,11 +17,11 @@ export function normalizeUrl(input: string): string {
   url.hostname = url.hostname.replace(/^(m\.|www\.)+/i, '');
 
   // 3. Remove tracking params
-  for (const key of Array.from(url.searchParams.keys())) {
+  url.searchParams.forEach((_, key) => {
     if (key.startsWith('utm_')) {
       url.searchParams.delete(key);
     }
-  }
+  });
 
   // 4. Normalize trailing slash
   if (url.pathname.endsWith('/') && url.pathname !== '/') {

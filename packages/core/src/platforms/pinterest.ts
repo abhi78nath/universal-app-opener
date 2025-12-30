@@ -1,9 +1,8 @@
 import { DeepLinkHandler, DeepLinkResult } from '../types';
 
-/**
- * Regex patterns to detect supported Pinterest URL types
- */
-const patterns: Array<[type: string, regex: RegExp]> = [
+type PinterestType = 'pin' | 'board' | 'user';
+
+const patterns: Array<[type: PinterestType, regex: RegExp]> = [
   ['pin', /pinterest\.com\/pin\/(\d+)/],
   ['board', /pinterest\.com\/([^/?#]+)\/([^/?#]+)/],
   ['user', /pinterest\.com\/([^/?#]+)/],
@@ -42,23 +41,24 @@ const buildResult = (webUrl: string, ios: string | null): DeepLinkResult => {
 /**
  * Map each URL type to its deeplink builder
  */
-const builders: Record<string, (match: RegExpMatchArray, webUrl: string) => DeepLinkResult> = {
-  pin: (match, webUrl) => {
-    const pinId = match[2];
-    return buildResult(webUrl, `pinterest://pin/${pinId}`);
-  },
+const builders: Record<PinterestType, (match: RegExpMatchArray, webUrl: string) => DeepLinkResult> =
+  {
+    pin: (match, webUrl) => {
+      const pinId = match[2];
+      return buildResult(webUrl, `pinterest://pin/${pinId}`);
+    },
 
-  board: (match, webUrl) => {
-    const username = match[2];
-    const board = match[3];
-    return buildResult(webUrl, `pinterest://board/${username}/${board}`);
-  },
+    board: (match, webUrl) => {
+      const username = match[2];
+      const board = match[3];
+      return buildResult(webUrl, `pinterest://board/${username}/${board}`);
+    },
 
-  user: (match, webUrl) => {
-    const username = match[2];
-    return buildResult(webUrl, `pinterest://user/${username}`);
-  },
-};
+    user: (match, webUrl) => {
+      const username = match[2];
+      return buildResult(webUrl, `pinterest://user/${username}`);
+    },
+  };
 
 /**
  * Pinterest deeplink handler
@@ -82,7 +82,7 @@ export const pinterestHandler: DeepLinkHandler = {
   },
 
   build: (webUrl, match) => {
-    const type = match[1];
+    const type = match[1] as PinterestType;
     const builder = builders[type];
 
     return builder ? builder(match, webUrl) : buildResult(webUrl, null);

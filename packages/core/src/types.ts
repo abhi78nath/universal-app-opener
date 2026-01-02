@@ -10,6 +10,7 @@ export type Platform =
   | 'discord'
   | 'github'
   | 'twitch'
+  | 'googlemaps'
   | 'unknown';
 
 export interface DeepLinkResult {

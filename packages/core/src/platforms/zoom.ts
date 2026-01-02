@@ -17,7 +17,7 @@ export const zoomHandler: DeepLinkHandler = {
   match: (url) => {
     // Match zoom.us/j/<meeting_id> or *.zoom.us/j/<meeting_id>
     // Only capture the meeting ID here, password is extracted separately
-    return url.match(/^https?:\/\/(?:[a-z0-9-]+\.)?zoom\.us\/j\/(\d+)/);
+    return url.match(/^https?:\/\/(?:[a-z0-9-]+\.)?zoom\.us\/j\/(\d+)/i);
   },
 
   build: (webUrl, match) => {

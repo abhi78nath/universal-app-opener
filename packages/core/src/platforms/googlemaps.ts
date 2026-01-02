@@ -1,56 +1,72 @@
 import { DeepLinkHandler } from '../types';
 
 /**
+ * Check if URL is a Google Maps short URL
+ */
+function isShortUrl(url: string): boolean {
+    return /^https?:\/\/(?:maps\.app\.goo\.gl|goo\.gl\/maps)/.test(url);
+}
+
+/**
  * Parse Google Maps URL (SYNC version)
  */
 function parseGoogleMapsUrl(url: string) {
-    const apiUrl = new URL(url);
-    const qp = apiUrl.searchParams;
-
-    // 1. API=1 query
-    if (qp.get('query')) {
-        return { type: 'search', query: qp.get('query')! };
+    // Handle short URLs - they can't be parsed synchronously
+    if (isShortUrl(url)) {
+        return { type: 'shorturl' };
     }
 
-    // 2. Search path
-    const searchMatch = url.match(/\/maps\/search\/([^/?#]+)/);
-    if (searchMatch) {
-        return { type: 'search', query: decodeURIComponent(searchMatch[1]) };
-    }
+    try {
+        const apiUrl = new URL(url);
+        const qp = apiUrl.searchParams;
 
-    // 3. Directions
-    const dirMatch = url.match(/\/maps\/dir\/([^/]+)\/([^/?#]+)/);
-    if (dirMatch) {
-        const start = decodeURIComponent(dirMatch[1]);
-        const end = decodeURIComponent(dirMatch[2]);
-        return { type: 'directions', query: `${start} to ${end}` };
-    }
+        // 1. API=1 query
+        if (qp.get('query')) {
+            return { type: 'search', query: qp.get('query')! };
+        }
 
-    // 4. Place
-    const placeMatch = url.match(
-        /\/maps\/place\/([^/@]+)\/@(-?\d+\.\d+),(-?\d+\.\d+),(\d+(?:\.\d+)?)([mz])/
-    );
-    if (placeMatch) {
-        return {
-            type: 'place',
-            query: decodeURIComponent(placeMatch[1]),
-            lat: placeMatch[2],
-            lng: placeMatch[3],
-            zoom: convertZoom(placeMatch[4], placeMatch[5]),
-        };
-    }
+        // 2. Search path
+        const searchMatch = url.match(/\/maps\/search\/([^/?#]+)/);
+        if (searchMatch) {
+            return { type: 'search', query: decodeURIComponent(searchMatch[1]) };
+        }
 
-    // 5. Coordinates
-    const coordsMatch = url.match(
-        /\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+),(\d+(?:\.\d+)?)([mz])/
-    );
-    if (coordsMatch) {
-        return {
-            type: 'coords',
-            lat: coordsMatch[1],
-            lng: coordsMatch[2],
-            zoom: convertZoom(coordsMatch[3], coordsMatch[4]),
-        };
+        // 3. Directions
+        const dirMatch = url.match(/\/maps\/dir\/([^/]+)\/([^/?#]+)/);
+        if (dirMatch) {
+            const start = decodeURIComponent(dirMatch[1]);
+            const end = decodeURIComponent(dirMatch[2]);
+            return { type: 'directions', query: `${start} to ${end}` };
+        }
+
+        // 4. Place
+        const placeMatch = url.match(
+            /\/maps\/place\/([^/@]+)\/@(-?\d+\.\d+),(-?\d+\.\d+),(\d+(?:\.\d+)?)([mz])/
+        );
+        if (placeMatch) {
+            return {
+                type: 'place',
+                query: decodeURIComponent(placeMatch[1]),
+                lat: placeMatch[2],
+                lng: placeMatch[3],
+                zoom: convertZoom(placeMatch[4], placeMatch[5]),
+            };
+        }
+
+        // 5. Coordinates
+        const coordsMatch = url.match(
+            /\/maps\/@(-?\d+\.\d+),(-?\d+\.\d+),(\d+(?:\.\d+)?)([mz])/
+        );
+        if (coordsMatch) {
+            return {
+                type: 'coords',
+                lat: coordsMatch[1],
+                lng: coordsMatch[2],
+                zoom: convertZoom(coordsMatch[3], coordsMatch[4]),
+            };
+        }
+    } catch (e) {
+        // If URL parsing fails, return unknown
     }
 
     return { type: 'unknown' };
@@ -89,6 +105,19 @@ export const googlemapsHandler: DeepLinkHandler = {
         let query = '';
 
         switch (parsed.type) {
+            case 'shorturl':
+                // For short URLs, use the URL directly with Google Maps schemes
+                // Google Maps apps can handle these short URLs
+                ios = `comgooglemaps://?url=${encodeURIComponent(webUrl)}`;
+                // Android intent to open the short URL in Google Maps app
+                const commonDeepLink = `https://${webUrl.replace(/^https?:\/\//, '')}`;
+                return {
+                    platform: 'googlemaps',
+                    webUrl: webUrl,
+                    ios: commonDeepLink,
+                    android: commonDeepLink,
+                };
+
             case 'search':
                 query = parsed.query!;
                 ios = `comgooglemaps://?q=${encodeURIComponent(query)}`;

@@ -121,30 +121,44 @@ export const googlemapsHandler: DeepLinkHandler = {
             case 'search':
                 query = parsed.query!;
                 ios = `comgooglemaps://?q=${encodeURIComponent(query)}`;
-                android = `geo:0,0?q=${encodeURIComponent(query)}`;
+                // Android intent using geo scheme to open search in Google Maps app
+                const searchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+                android = `intent://0,0?q=${encodeURIComponent(query)}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(searchUrl)};end`;
                 break;
 
             case 'place':
                 query = parsed.query || `${parsed.lat},${parsed.lng}`;
                 ios = `comgooglemaps://?q=${encodeURIComponent(query)}`;
-                android = `geo:${parsed.lat},${parsed.lng}?z=${parsed.zoom}`;
+                // Android intent using geo scheme to open place in Google Maps app
+                const placeUrl = `https://www.google.com/maps/place/${encodeURIComponent(query)}/@${parsed.lat},${parsed.lng},${parsed.zoom}z`;
+                android = `intent://${parsed.lat},${parsed.lng}?q=${encodeURIComponent(query)}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(placeUrl)};end`;
                 break;
 
             case 'coords':
                 query = `${parsed.lat},${parsed.lng}`;
                 ios = `comgooglemaps://?center=${parsed.lat},${parsed.lng}&zoom=${parsed.zoom}`;
-                android = `geo:${parsed.lat},${parsed.lng}?z=${parsed.zoom}`;
+                // Android intent using geo scheme to open coordinates in Google Maps app
+                const coordsUrl = `https://www.google.com/maps/@${parsed.lat},${parsed.lng},${parsed.zoom}z`;
+                android = `intent://${parsed.lat},${parsed.lng}?z=${parsed.zoom}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(coordsUrl)};end`;
                 break;
 
             case 'directions':
                 query = parsed.query!;
                 ios = `comgooglemaps://?daddr=${encodeURIComponent(query)}`;
-                android = `geo:0,0?q=${encodeURIComponent(query)}`;
+                // Android intent using geo scheme to open directions in Google Maps app
+                // Parse start and end from the directions query
+                const dirParts = query.split(' to ');
+                const dirStart = dirParts[0] || '';
+                const dirEnd = dirParts[1] || dirParts[0] || '';
+                const directionsUrl = `https://www.google.com/maps/dir/${encodeURIComponent(dirStart)}/${encodeURIComponent(dirEnd)}`;
+                android = `intent://0,0?q=${encodeURIComponent(query)}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(directionsUrl)};end`;
                 break;
 
             default:
                 ios = `comgooglemaps://`;
-                android = `geo:0,0?q=`;
+                // Android intent using geo scheme to open Google Maps app
+                const defaultUrl = 'https://www.google.com/maps';
+                android = `intent://0,0#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(defaultUrl)};end`;
         }
 
         const normalizedWebUrl = query

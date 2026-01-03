@@ -8,7 +8,7 @@ function isShortUrl(url: string): boolean {
 }
 
 /**
- * Parse Google Maps URL (SYNC version)
+ * Parse Google Maps URL
  */
 function parseGoogleMapsUrl(url: string) {
     // Handle short URLs - they can't be parsed synchronously
@@ -66,7 +66,7 @@ function parseGoogleMapsUrl(url: string) {
             };
         }
     } catch (e) {
-        // If URL parsing fails, return unknown
+        console.error('ERROR: ', e);
     }
 
     return { type: 'unknown' };
@@ -109,7 +109,6 @@ export const googlemapsHandler: DeepLinkHandler = {
                 // For short URLs, use the URL directly with Google Maps schemes
                 // Google Maps apps can handle these short URLs
                 ios = `comgooglemaps://?url=${encodeURIComponent(webUrl)}`;
-                // Android intent to open the short URL in Google Maps app
                 const commonDeepLink = `https://${webUrl.replace(/^https?:\/\//, '')}`;
                 return {
                     platform: 'googlemaps',
@@ -121,7 +120,6 @@ export const googlemapsHandler: DeepLinkHandler = {
             case 'search':
                 query = parsed.query!;
                 ios = `comgooglemaps://?q=${encodeURIComponent(query)}`;
-                // Android intent using geo scheme to open search in Google Maps app
                 const searchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
                 android = `intent://0,0?q=${encodeURIComponent(query)}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(searchUrl)};end`;
                 break;
@@ -129,7 +127,6 @@ export const googlemapsHandler: DeepLinkHandler = {
             case 'place':
                 query = parsed.query || `${parsed.lat},${parsed.lng}`;
                 ios = `comgooglemaps://?q=${encodeURIComponent(query)}`;
-                // Android intent using geo scheme to open place in Google Maps app
                 const placeUrl = `https://www.google.com/maps/place/${encodeURIComponent(query)}/@${parsed.lat},${parsed.lng},${parsed.zoom}z`;
                 android = `intent://${parsed.lat},${parsed.lng}?q=${encodeURIComponent(query)}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(placeUrl)};end`;
                 break;
@@ -137,7 +134,6 @@ export const googlemapsHandler: DeepLinkHandler = {
             case 'coords':
                 query = `${parsed.lat},${parsed.lng}`;
                 ios = `comgooglemaps://?center=${parsed.lat},${parsed.lng}&zoom=${parsed.zoom}`;
-                // Android intent using geo scheme to open coordinates in Google Maps app
                 const coordsUrl = `https://www.google.com/maps/@${parsed.lat},${parsed.lng},${parsed.zoom}z`;
                 android = `intent://${parsed.lat},${parsed.lng}?z=${parsed.zoom}#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(coordsUrl)};end`;
                 break;
@@ -145,7 +141,6 @@ export const googlemapsHandler: DeepLinkHandler = {
             case 'directions':
                 query = parsed.query!;
                 ios = `comgooglemaps://?daddr=${encodeURIComponent(query)}`;
-                // Android intent using geo scheme to open directions in Google Maps app
                 // Parse start and end from the directions query
                 const dirParts = query.split(' to ');
                 const dirStart = dirParts[0] || '';
@@ -156,7 +151,6 @@ export const googlemapsHandler: DeepLinkHandler = {
 
             default:
                 ios = `comgooglemaps://`;
-                // Android intent using geo scheme to open Google Maps app
                 const defaultUrl = 'https://www.google.com/maps';
                 android = `intent://0,0#Intent;scheme=geo;package=com.google.android.apps.maps;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;S.browser_fallback_url=${encodeURIComponent(defaultUrl)};end`;
         }

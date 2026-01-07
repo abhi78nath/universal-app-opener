@@ -9,8 +9,10 @@ export type Platform =
   | 'threads'
   | 'discord'
   | 'github'
+  | 'pinterest'
   | 'twitch'
   | 'snapchat'
+  | 'telegram'
   | 'unknown';
 
 export interface DeepLinkResult {

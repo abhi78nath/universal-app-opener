@@ -11,6 +11,7 @@ export type Platform =
   | 'github'
   | 'pinterest'
   | 'twitch'
+  | 'snapchat'
   | 'telegram'
   | 'unknown';
 

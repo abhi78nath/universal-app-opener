@@ -11,8 +11,9 @@ import {
   githubHandler,
   pinterestHandler,
   twitchHandler,
-  unknownHandler,
+  snapchatHandler,
   telegramHandler,
+  unknownHandler,
 } from './platforms';
 import { DeepLinkResult } from './types';
 import { normalizeUrl } from './utils/normalizeUrl';
@@ -26,6 +27,7 @@ const handlers = [
   spotifyHandler,
   threadsHandler,
   whatsappHandler,
+  snapchatHandler,
   facebookHandler,
   redditHandler,
   discordHandler,

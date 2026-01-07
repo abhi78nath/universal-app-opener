@@ -14,6 +14,7 @@ export type Platform =
   | 'snapchat'
   | 'telegram'
   | 'zoom'
+  | 'substack'
   | 'unknown';
 
 export interface DeepLinkResult {

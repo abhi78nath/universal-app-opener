@@ -8,6 +8,7 @@ import { redditHandler } from './reddit';
 import { snapchatHandler } from './snapchat';
 import { spotifyHandler } from './spotify';
 import { telegramHandler } from './telegram';
+import { substackHandler } from './substack';
 import { threadsHandler } from './threads';
 import { twitchHandler } from './twitch';
 import { unknownHandler } from './unknown';
@@ -16,6 +17,15 @@ import { youtubeHandler } from './youtube';
 import { zoomHandler } from './zoom';
 
 export {
+  linkedinHandler,
+  youtubeHandler,
+  instagramHandler,
+  spotifyHandler,
+  substackHandler,
+  threadsHandler,
+  whatsappHandler,
+  facebookHandler,
+  redditHandler,
   discordHandler,
   facebookHandler,
   githubHandler,
